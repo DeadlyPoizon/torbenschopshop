@@ -13,6 +13,7 @@ public class Animal implements Serializable {
         this.ID = ID;
         this.weight = weight;
         this.origin = origin;
+        this.date = new Date();
     }
 
     public Animal(){
