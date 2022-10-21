@@ -2,17 +2,18 @@ package ChopShop.DAOs;
 
 import ChopShop.DAOs.ws.Animals;
 import ChopShop.DTOs.Animals.Animal;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SequenceWriter;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.io.*;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class AnimalDAO implements Animals {
 
@@ -26,18 +27,14 @@ public class AnimalDAO implements Animals {
         animal.setDate(date);
 
 /*      ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File("jsons/animals").toFile(), animal);*/
+        objectMapper.writeValue(new File("jsons/animals"), animal);*/
         return animal;
     }
 
     @Override
     public Animal create(String ID, double weight, String Origin) throws IOException {
-        final Path path = Path.of("src/main/resources/jsons/animals.json");
-        boolean exists = Files.isReadable(path);
-        Animal animal = new Animal(ID, weight, Origin);
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Animal> animals;
 
+        Animal animal = new Animal(ID, weight, Origin);
         /*
         File file = new File("jsons/animals.json");
 
@@ -47,22 +44,40 @@ public class AnimalDAO implements Animals {
             }
         }
 */
+        try {
 
-        //if(!exists) {
-            objectMapper.writeValue(path.toFile(), animal);
-       // }
-       /* else{
-            animals = Arrays.asList(objectMapper.readValue(path.toFile(), Animal[].class));
-            animals.add(animal);
-            objectMapper.writeValue(path.toFile(), animals);
-        }*/
+
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+
+            File file = new File("src/main/resources/jsons/animals.json");
+            FileWriter fileWriter = new FileWriter(file,true);
+            SequenceWriter sequenceWriter = writer.writeValuesAsArray(fileWriter);
+
+
+
+
+                sequenceWriter.write(animal);
+                sequenceWriter.close();
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return animal;
     }
 
     @Override
     public List<Animal> readAll() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return Arrays.asList(objectMapper.readValue(Paths.get("src/main/resources/jsons/animals.json").toFile(), Animal[].class));
+        List<Animal> animals;
+        File file = new File("src/main/resources/jsons/animals.json");
+        animals = Arrays.asList(objectMapper.readValue(file, Animal[].class));
+
+        return animals;
     }
 
     @Override
