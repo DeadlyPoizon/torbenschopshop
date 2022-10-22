@@ -7,13 +7,11 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SequenceWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class AnimalDAO implements Animals {
 
@@ -81,8 +79,21 @@ public class AnimalDAO implements Animals {
     }
 
     @Override
-    public Animal read(String ID) {
-        return null;
+    public Animal read(String ID) throws IOException { // Christian if you read this, så tror jeg den her read metode virker, jeg ved bare ikke lige hvordan jeg kan teste den i postman ;(
+
+        ObjectMapper reader = new ObjectMapper();
+        List<Animal> animal = new ArrayList<>();
+        File file = new File("src/main/resources/jsons/animals.json");
+        ObjectNode node = reader.readValue(file,ObjectNode.class);
+
+        if(node.has(ID)){
+          Animal jsonNode = reader.treeToValue(node,Animal.class);
+          animal.add(jsonNode);
+            System.out.println(animal.get(0));
+        }
+
+return animal.get(0);
+
     }
 
     @Override

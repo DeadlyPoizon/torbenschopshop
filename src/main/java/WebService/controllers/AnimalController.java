@@ -37,5 +37,11 @@ public class AnimalController {
         return animal;
     }
 
+    @GetMapping(value = "/{id}")
+    public Animal read( @PathVariable("id") String id) throws IOException {
+        Animal animal = dao.read(id);
+       return animal;
+    }
+
 
 }

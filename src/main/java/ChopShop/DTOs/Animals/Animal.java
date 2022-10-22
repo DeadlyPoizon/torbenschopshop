@@ -20,6 +20,13 @@ public class Animal implements Serializable {
         //
     }
 
+    public Animal(String ID, double weight, String origin, Date date) {
+        this.ID = ID;
+        this.weight = weight;
+        this.origin = origin;
+        this.date = date;
+    }
+
     public String getID() {
         return ID;
     }
