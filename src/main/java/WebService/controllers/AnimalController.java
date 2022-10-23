@@ -6,21 +6,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/animals")
 public class AnimalController {
    private final AnimalDAO dao;
-    private ArrayList<Animal> animals = new ArrayList<>();
 
 
     public AnimalController() {
     this.dao = new AnimalDAO();
     }
 
-    @GetMapping
+  @GetMapping
     public List<Animal> readAll() throws IOException {
        return dao.readAll();
     }
@@ -29,7 +28,7 @@ public class AnimalController {
     @ResponseStatus(HttpStatus.CREATED)
     public Animal create(@RequestBody Animal animal){
         try{
-            return dao.create(animal.getID(), animal.getWeight(), animal.getOrigin());
+            return dao.create(animal.getId(), animal.getWeight(), animal.getOrigin(), animal.getDate());
         }
         catch (Exception e){
             e.getStackTrace();
@@ -37,10 +36,34 @@ public class AnimalController {
         return animal;
     }
 
-    @GetMapping(value = "/{id}")
-    public Animal read( @PathVariable("id") String id) throws IOException {
-        Animal animal = dao.read(id);
-       return animal;
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/id/{id}")
+    public Animal readID( @PathVariable("id") String id) throws IOException {
+    return dao.readID(id);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/weight/{weight}")
+    public List<Animal> readWeight( @PathVariable("weight") double weight) throws IOException {
+        return dao.readWeight(weight);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/origin/{origin}")
+    public List<Animal> readOrigin( @PathVariable("origin") String origin) throws IOException {
+        return dao.readOrigin(origin);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/date/{date}")
+    public List<Animal> readDate( @PathVariable("date") Date date) throws IOException {
+        return dao.readDate(date);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") String id) {
+        dao.delete(id);
     }
 
 

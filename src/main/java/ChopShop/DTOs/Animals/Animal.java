@@ -1,38 +1,32 @@
 package ChopShop.DTOs.Animals;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 public class Animal implements Serializable {
-    private String ID;
+    private String id;
     private double weight;
     private String origin;
-    private Date date;
+    private java.sql.Date date;
 
-    public Animal(String ID, double weight, String origin) {
-        this.ID = ID;
-        this.weight = weight;
-        this.origin = origin;
-        this.date = new Date();
-    }
 
     public Animal(){
         //
     }
 
-    public Animal(String ID, double weight, String origin, Date date) {
-        this.ID = ID;
+    public Animal(String id, double weight, String origin, Date date) {
+        this.id = id;
         this.weight = weight;
         this.origin = origin;
         this.date = date;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public double getWeight() {
@@ -51,11 +45,11 @@ public class Animal implements Serializable {
         this.origin = origin;
     }
 
-    public Date getDate() {
+    public java.sql.Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(java.sql.Date date) {
         this.date = date;
     }
 
