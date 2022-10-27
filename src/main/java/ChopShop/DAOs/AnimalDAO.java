@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import db.DataMapper;
 import db.DbHelper;
 
+import javax.persistence.Id;
 import java.io.*;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class AnimalDAO implements Animals {
+
 
     private final DbHelper<Animal> db;
 
@@ -27,10 +29,11 @@ public class AnimalDAO implements Animals {
         this.db = new DbHelper<>(JDBC_URL, USERNAME, PASSWORD);
     }
 
-    private static Animal createAnimalDTO(String ID, double weight, String origin, java.sql.Date date){
+    private static Animal createAnimalDTO(int id,String type, double weight, String origin, java.sql.Date date){
 
         Animal animal = new Animal();
-        animal.setId(ID);
+        animal.setId(id);
+        animal.setType(type);
         animal.setWeight(weight);
         animal.setOrigin(origin);
         animal.setDate(date);
@@ -39,21 +42,22 @@ public class AnimalDAO implements Animals {
     }
 
     @Override
-    public Animal create(String ID, double weight, String Origin, java.sql.Date date) throws IOException {
+    public Animal create(int id,String type, double weight, String Origin, java.sql.Date date) throws IOException {
 
-        db.executeUpdate("INSERT INTO animal VALUES (?, ?, ?, ?)", ID, weight, Origin,date);
-        return createAnimalDTO(ID,weight,Origin,date);
+        db.executeUpdate("INSERT INTO animal VALUES (DEFAULT, ?, ?, ?, ?)", type, weight, Origin,date);
+        return createAnimalDTO(id,type,weight,Origin,date);
 
     }
 
     private static class AnimalMapper implements DataMapper<Animal> {
         public Animal create(ResultSet rs) throws SQLException {
-            String id = rs.getString("id");
+            int id = rs.getInt("id");
+            String type = rs.getString("type");
             double weight = rs.getDouble("weight");
             String origin = rs.getString("origin");
             java.sql.Date date = rs.getDate("date");
 
-            return createAnimalDTO(id,weight,origin, date);
+            return createAnimalDTO(id,type,weight,origin, date);
         }
     }
 
@@ -64,10 +68,16 @@ public class AnimalDAO implements Animals {
 
     }
 
+
+
     @Override
-    public Animal readID(String id) throws IOException {
+    public Animal readID(int id) throws IOException {
         return db.mapSingle(new AnimalMapper(), "SELECT * FROM animal WHERE id = ?", id);
 
+    }
+    @Override
+    public List<Animal> readType(String type) throws IOException {
+        return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE type = ?", type);
     }
 
     @Override

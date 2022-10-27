@@ -28,7 +28,7 @@ public class AnimalController {
     @ResponseStatus(HttpStatus.CREATED)
     public Animal create(@RequestBody Animal animal){
         try{
-            return dao.create(animal.getId(), animal.getWeight(), animal.getOrigin(), animal.getDate());
+            return dao.create(animal.getId(),animal.getType(), animal.getWeight(), animal.getOrigin(), animal.getDate());
         }
         catch (Exception e){
             e.getStackTrace();
@@ -38,8 +38,14 @@ public class AnimalController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/id/{id}")
-    public Animal readID( @PathVariable("id") String id) throws IOException {
+    public Animal readID( @PathVariable("id") int id) throws IOException {
     return dao.readID(id);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/type/{type}")
+    public List<Animal> readType( @PathVariable("type") String type) throws IOException {
+        return dao.readType(type);
     }
 
     @ResponseStatus(HttpStatus.OK)

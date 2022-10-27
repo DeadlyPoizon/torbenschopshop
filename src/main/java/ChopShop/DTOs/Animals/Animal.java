@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.sql.Date;
 
 public class Animal implements Serializable {
-    private String id;
+    private int id;
+
+    private String type;
     private double weight;
     private String origin;
     private java.sql.Date date;
@@ -14,18 +16,27 @@ public class Animal implements Serializable {
         //
     }
 
-    public Animal(String id, double weight, String origin, Date date) {
+    public Animal(int id, String type, double weight, String origin, Date date) {
         this.id = id;
+        this.type = type;
         this.weight = weight;
         this.origin = origin;
         this.date = date;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
