@@ -5,6 +5,7 @@ import db.DbHelper;
 import io.grpc.stub.StreamObserver;
 import src.main.java.grpc.AnimalRequest;
 import src.main.java.grpc.AnimalRequestServiceGrpc;
+import src.main.java.grpc.PartsRequest;
 import src.main.java.grpc.response;
 
 import java.sql.Date;

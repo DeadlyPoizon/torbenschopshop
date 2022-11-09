@@ -12,7 +12,7 @@ message AnimalRequest{
 
 message PartsRequest{
   string animalid = 1;
-  string orign = 2;
+  string partname = 2;
   double weight = 3;
 }
 
@@ -25,5 +25,6 @@ service AnimalRequestService{
 }
 
 service PartRequestService{
-  rpc grpc(PartsRequest) returns (response);
+  rpc partsgrpc(PartsRequest) returns (response);
 }
+
