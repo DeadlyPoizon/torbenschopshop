@@ -7,6 +7,13 @@ message AnimalRequest{
   string origin = 2;
   string date = 3;
   double weight = 4;
+  string type = 5;
+}
+
+message PartsRequest{
+  string animalid = 1;
+  string orign = 2;
+  double weight = 3;
 }
 
 message response{
@@ -15,4 +22,8 @@ message response{
 
 service AnimalRequestService{
   rpc grpc(AnimalRequest) returns (response);
+}
+
+service PartRequestService{
+  rpc grpc(PartsRequest) returns (response);
 }

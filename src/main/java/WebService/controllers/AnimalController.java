@@ -28,7 +28,7 @@ public class AnimalController {
     @ResponseStatus(HttpStatus.CREATED)
     public Animal create(@RequestBody Animal animal){
         try{
-            return dao.create(animal.getId(),animal.getType(), animal.getWeight(), animal.getOrigin(), animal.getDate());
+            return dao.create(animal.getId(), animal.getWeight(), animal.getOrigin(), animal.getDate(), animal.getType());
         }
         catch (Exception e){
             e.getStackTrace();

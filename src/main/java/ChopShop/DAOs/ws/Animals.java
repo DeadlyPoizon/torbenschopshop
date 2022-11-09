@@ -9,7 +9,7 @@ import java.util.List;
 public interface Animals {
 
 
-    Animal create(int id,String type, double weight, String Origin, java.sql.Date date) throws IOException;
+    Animal create(int id, double weight, String Origin, java.sql.Date date, String type) throws IOException;
 
     List<Animal> readAll() throws IOException;
 

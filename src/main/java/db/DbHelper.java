@@ -8,14 +8,13 @@ import java.util.List;
 
 public class DbHelper<T> {
 
-    private final String jdbcURL;
-    private final String username;
-    private final String password;
+    private final static String jdbcURL = "jdbc:postgresql://surus.db.elephantsql.com:5432/wtwmsyke?currentSchema=slaughter_house";
 
-    public DbHelper(String jdbcURL, String username, String password) {
-        this.jdbcURL = jdbcURL;
-        this.username = username;
-        this.password = password;
+    private final static String username = "wtwmsyke";      //Indsæt dine datebase loginoplysninger her Ole :)
+
+    private final static String password = "rV40CIlTHBJQ2PnZ4NTiILx1gb1M5tp4";
+
+    public DbHelper() {
         try {
             DriverManager.registerDriver(new Driver());
         } catch (SQLException e) {
@@ -38,7 +37,7 @@ public class DbHelper<T> {
         return stat;
     }
 
-    public int executeUpdate(String sql, Object... parameters) {
+    public int executeUpdate(String sql, Object... parameters){
         try (Connection connection = getConnection()) {
             PreparedStatement stat = prepare(connection, sql, parameters);
             return stat.executeUpdate();

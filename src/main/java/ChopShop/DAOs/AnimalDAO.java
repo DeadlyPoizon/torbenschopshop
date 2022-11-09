@@ -6,6 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import db.DataMapper;
 import db.DbHelper;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import org.aspectj.weaver.ast.Or;
+import src.main.java.grpc.AnimalRequest;
+import src.main.java.grpc.AnimalRequestServiceGrpc;
 
 import javax.persistence.Id;
 import java.io.*;
@@ -16,20 +21,10 @@ import java.util.*;
 
 public class AnimalDAO implements Animals {
 
-
-    private final DbHelper<Animal> db;
-
-    private final static String JDBC_URL = "jdbc:postgresql://localhost:5432/postgres?currentSchema=slaughter_house";
-
-    private final static String USERNAME = "postgres";      //Indsæt dine datebase loginoplysninger her Ole :)
-
-    private final static String PASSWORD = "6969420";
-
     public AnimalDAO() {
-        this.db = new DbHelper<>(JDBC_URL, USERNAME, PASSWORD);
     }
 
-    private static Animal createAnimalDTO(int id,String type, double weight, String origin, java.sql.Date date){
+    private static Animal createAnimalDTO(int id, double weight, String origin, java.sql.Date date, String type){
 
         Animal animal = new Animal();
         animal.setId(id);
@@ -41,12 +36,39 @@ public class AnimalDAO implements Animals {
         return animal;
     }
 
+    private ManagedChannel connect(){
+        ManagedChannel managedChannel = ManagedChannelBuilder
+                .forAddress("localhost", 5555)
+                .usePlaintext()
+                .build();
+        return managedChannel;
+    }
+
     @Override
-    public Animal create(int id,String type, double weight, String Origin, java.sql.Date date) throws IOException {
+    public Animal create(int id, double weight, String Origin, java.sql.Date date, String type) throws IOException {
 
-        db.executeUpdate("INSERT INTO animal VALUES (DEFAULT, ?, ?, ?, ?)", type, weight, Origin,date);
-        return createAnimalDTO(id,type,weight,Origin,date);
+       ManagedChannel channel = connect();
+        System.out.println(channel.toString());
+        System.out.println("connected");
 
+        AnimalRequestServiceGrpc.AnimalRequestServiceBlockingStub blockingStub =
+                AnimalRequestServiceGrpc.newBlockingStub(channel);
+        System.out.println("stubbed");
+
+        AnimalRequest animalRequest = AnimalRequest.newBuilder()
+                .setId(String.valueOf(id))
+                .setWeight(weight)
+                .setOrigin(Origin)
+                .setDate(date.toString())
+                .setType(type)
+                .build();
+        System.out.println(animalRequest.toString());
+        System.out.println("built");
+
+        src.main.java.grpc.response response = blockingStub.grpc(animalRequest);
+        System.out.println("Success!");
+        channel.shutdown();
+        return createAnimalDTO(id,weight,Origin,date, type);
     }
 
     private static class AnimalMapper implements DataMapper<Animal> {
@@ -57,13 +79,15 @@ public class AnimalDAO implements Animals {
             String origin = rs.getString("origin");
             java.sql.Date date = rs.getDate("date");
 
-            return createAnimalDTO(id,type,weight,origin, date);
+            return createAnimalDTO(id,weight,origin, date, type);
         }
     }
 
     @Override
     public List<Animal> readAll() throws IOException {
-        return db.map(new AnimalMapper(),"SELECT * FROM animal");
+
+        return null;
+       // return db.map(new AnimalMapper(),"SELECT * FROM animal");
 
 
     }
@@ -72,34 +96,39 @@ public class AnimalDAO implements Animals {
 
     @Override
     public Animal readID(int id) throws IOException {
-        return db.mapSingle(new AnimalMapper(), "SELECT * FROM animal WHERE id = ?", id);
+        return null;
+        //return db.mapSingle(new AnimalMapper(), "SELECT * FROM animal WHERE id = ?", id);
 
     }
     @Override
     public List<Animal> readType(String type) throws IOException {
-        return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE type = ?", type);
+       return null;
+       // return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE type = ?", type);
     }
 
     @Override
     public List<Animal> readWeight(double weight) throws IOException {
-        return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE weight = ?", weight);
+       return null;
+        // return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE weight = ?", weight);
 
     }
 
     @Override
     public List<Animal> readOrigin(String origin) throws IOException {
-        return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE origin = ?", origin);
+       return null;
+       // return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE origin = ?", origin);
 
     }
 
     @Override
     public List<Animal> readDate(Date date) throws IOException {
-        return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE date = ?", date);
+        return null;
+        //return db.map(new AnimalMapper(), "SELECT * FROM animal WHERE date = ?", date);
 
     }
 
     @Override
     public void delete(String ID) {
-db.executeUpdate("DELETE FROM animal WHERE id = ?",ID);
+//db.executeUpdate("DELETE FROM animal WHERE id = ?",ID);
     }
 }
