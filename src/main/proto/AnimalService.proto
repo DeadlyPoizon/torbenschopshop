@@ -1,0 +1,18 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package src.main.java.grpc;
+
+message AnimalRequest{
+  string id = 1;
+  string origin = 2;
+  string date = 3;
+  double weight = 4;
+}
+
+message response{
+  string response = 1;
+}
+
+service AnimalRequestService{
+  rpc grpc(AnimalRequest) returns (response);
+}
