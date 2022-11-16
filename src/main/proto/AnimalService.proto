@@ -10,6 +10,14 @@ message AnimalRequest{
   string type = 5;
 }
 
+message AllAnimals{
+  string response = 1;
+}
+
+message AllAnimalsRequest{
+  string request = 1;
+}
+
 message PartsRequest{
   string animalid = 1;
   string partname = 2;
@@ -20,8 +28,18 @@ message response{
   string response = 1;
 }
 
+message responseNumber{
+  int32 number = 1;
+}
+
+message NumberOfAnimals{
+  int32 animals = 1;
+}
+
 service AnimalRequestService{
   rpc grpc(AnimalRequest) returns (response);
+  rpc amount(NumberOfAnimals) returns (responseNumber);
+  rpc getAll(AllAnimalsRequest) returns (AllAnimals);
 }
 
 service PartRequestService{

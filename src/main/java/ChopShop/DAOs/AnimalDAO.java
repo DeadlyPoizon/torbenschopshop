@@ -9,8 +9,10 @@ import db.DbHelper;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.aspectj.weaver.ast.Or;
+import src.main.java.grpc.AllAnimalsRequest;
 import src.main.java.grpc.AnimalRequest;
 import src.main.java.grpc.AnimalRequestServiceGrpc;
+import src.main.java.grpc.NumberOfAnimals;
 
 import javax.persistence.Id;
 import java.io.*;
@@ -85,9 +87,30 @@ public class AnimalDAO implements Animals {
 
     @Override
     public List<Animal> readAll() throws IOException {
+        List<Animal> animals;
 
-        return null;
-       // return db.map(new AnimalMapper(),"SELECT * FROM animal");
+        ManagedChannel channel = connect();
+
+        AnimalRequestServiceGrpc.AnimalRequestServiceBlockingStub animalRequestServiceBlockingStub =
+                AnimalRequestServiceGrpc.newBlockingStub(channel);
+
+        AllAnimalsRequest allAnimalsRequest = AllAnimalsRequest.newBuilder()
+                .setRequest("all").build();
+
+
+        String responseJson;
+
+        src.main.java.grpc.AllAnimals allAnimals = animalRequestServiceBlockingStub.getAll(allAnimalsRequest);
+        responseJson = allAnimals.getResponse();
+
+        System.out.println(responseJson);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        animals = objectMapper.readerForListOf(Animal.class).readValue(responseJson);
+
+        return animals;
+
+        // return db.map(new AnimalMapper(),"SELECT * FROM animal");
 
 
     }

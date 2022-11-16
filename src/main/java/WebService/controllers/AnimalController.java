@@ -4,6 +4,7 @@ import ChopShop.DAOs.AnimalDAO;
 import ChopShop.DTOs.Animals.Animal;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -19,7 +20,10 @@ public class AnimalController {
     this.dao = new AnimalDAO();
     }
 
-  @GetMapping
+
+
+
+    @GetMapping
     public List<Animal> readAll() throws IOException {
        return dao.readAll();
     }
