@@ -13,7 +13,7 @@ public interface Animals {
 
     List<Animal> readAll() throws IOException;
 
-    Animal readID(int ID) throws IOException;
+    Animal readID(String id) throws IOException;
     List<Animal> readType(String type) throws IOException;
    List<Animal> readWeight(double weight) throws IOException;
     List<Animal> readOrigin(String origin) throws IOException;

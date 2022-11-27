@@ -43,8 +43,13 @@ public class AnimalServiceImpl extends AnimalRequestServiceGrpc.AnimalRequestSer
     @Override
     public void getAll(AllAnimalsRequest request, StreamObserver<AllAnimals> streamObserver){
         List<Animal> animals;
-        animals = dbHelper.map(new AnimalMapper(),"SELECT * FROM animal");
 
+        if(request.getRequest().equals("all")) {
+            animals = dbHelper.map(new AnimalMapper(), "SELECT * FROM animal");
+        }
+        else {
+            animals = dbHelper.map(new AnimalMapper(), "SELECT * FROM animal WHERE id = ?", request.getRequest());
+        }
         String responseJSON;
         try {
 

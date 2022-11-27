@@ -118,9 +118,30 @@ public class AnimalDAO implements Animals {
 
 
     @Override
-    public Animal readID(int id) throws IOException {
-        return null;
-        //return db.mapSingle(new AnimalMapper(), "SELECT * FROM animal WHERE id = ?", id);
+    public Animal readID(String id) throws IOException {
+        List<Animal> animals;
+
+        ManagedChannel channel = connect();
+
+        AnimalRequestServiceGrpc.AnimalRequestServiceBlockingStub animalRequestServiceBlockingStub =
+                AnimalRequestServiceGrpc.newBlockingStub(channel);
+
+        AllAnimalsRequest allAnimalsRequest = AllAnimalsRequest.newBuilder()
+                .setRequest(id).build();
+
+        String responseJson;
+
+        src.main.java.grpc.AllAnimals allAnimals = animalRequestServiceBlockingStub.getAll(allAnimalsRequest);
+        responseJson = allAnimals.getResponse();
+
+        System.out.println(responseJson);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        animals = objectMapper.readerForListOf(Animal.class).readValue(responseJson);
+
+        System.out.println(responseJson);
+        System.out.println(animals.get(0).toString());
+        return animals.get(0);
 
     }
     @Override

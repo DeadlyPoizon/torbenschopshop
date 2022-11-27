@@ -43,7 +43,7 @@ public class AnimalController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/id/{id}")
     public Animal readID( @PathVariable("id") int id) throws IOException {
-    return dao.readID(id);
+    return dao.readID(String.valueOf(id));
     }
 
     @ResponseStatus(HttpStatus.OK)
